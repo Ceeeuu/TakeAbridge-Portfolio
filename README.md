@@ -8,30 +8,27 @@ TakeABridge 是一個促進異質觀點對話的去極化對話平台。
 
 ---
 
+> **完整操作流程（含建議截圖）見 [CONTRIBUTIONS.md](./CONTRIBUTIONS.md)。**
+
 ## 前端畫面（React）
 
-負責平台各頁面的介面與互動：
-
-- 用 D3.js 把後端算出的推理脈絡資料呈現成概念網路圖（CCND）
-- 首頁、知識庫、歷史紀錄、成就、對話結算等頁面
+負責平台各頁面的介面與互動，其中最主要的是用 D3.js 把後端算出的推理脈絡資料呈現成**概念認知網路圖（CCND）**，以及首頁、成就等頁面。
 
 `[截圖：CCND 概念網路圖，對話進行到一半、已長出多個節點、看得出層次的狀態]`
 
-## Godot 2D 虛擬大廳（Godot 4.7）
+## Godot 2D 虛擬大廳（Godot 4）
 
-負責 2D 多人社交世界的畫面與互動：玩家相遇、在頭上張貼議題、用表情回應、聊天、語音。
+負責一個像素風的 2D 多人互動空間：玩家在世界中自由移動、發表議題、閱讀彼此頭頂張貼的議題。
 
 `[截圖：虛擬大廳世界全景，看得到地圖與角色]`
-`[截圖：角色頭頂的議題泡泡與表情列]`
-
-操作流程與細節記錄在 [CONTRIBUTIONS.md](./CONTRIBUTIONS.md)。
+`[截圖：角色頭頂的議題泡泡]`
 
 ---
 
 ## 技術
 
-- 我用到的：React、Vite、React Router、D3.js、Godot 4.7
-- 團隊其他部分：Django、DRF、Django Channels、PostgreSQL + pgvector、ChromaDB、Sentence-Transformers、Claude
+- 我用到的：React 19、Vite、React Router、D3.js、Godot 4
+- 團隊其他部分：Django 6、DRF、Django Channels、PostgreSQL + pgvector、ChromaDB、Sentence-Transformers、Claude、Gemini、LangChain
 
 ## 分工
 
