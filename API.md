@@ -1,5 +1,7 @@
 # API Reference · REST & WebSocket
 
+> ℹ️ **System Context（非本人作品）**：這份完整 API 對照表屬**後端團隊**的設計，放在這裡是為了呈現整體系統與我理解全貌。我負責的是**前端呈現層**，串接（實際打這些 API）由團隊其他成員負責。我的作品見 [`CONTRIBUTIONS.md`](./CONTRIBUTIONS.md)。
+
 TakeABridge 後端以 Django REST Framework + Django Channels 提供服務。以下為**設計層級**的 API 契約對照表，不含實作、金鑰或請求範例中的真實資料。
 
 - Base prefix：`/api/`

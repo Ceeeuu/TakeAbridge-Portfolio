@@ -1,5 +1,7 @@
 # Database Schema · ER Diagram
 
+> ℹ️ **System Context（非本人作品）**：資料庫 schema 屬**後端團隊**的設計，放這裡是為了呈現整體系統與我理解全貌。我負責前端呈現與 Godot，不含資料庫設計。我的作品見 [`CONTRIBUTIONS.md`](./CONTRIBUTIONS.md)。
+
 TakeABridge 以 **PostgreSQL 16 + pgvector** 為主資料庫：業務資料與對話語意向量同存一庫，方便用 SQL 端向量運算做配對、立場漂移與觀點去重。RAG 靜態知識庫另置於 ChromaDB（不在下列關聯式表中）。
 
 - `USER` 指 Django 內建 `auth.User`

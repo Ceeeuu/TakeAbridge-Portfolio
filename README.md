@@ -1,162 +1,103 @@
-# TakeABridge（橋得攏 · BridgeUs）— System Design Portfolio
+# TakeABridge（橋得攏 · BridgeUs）
 
 > 一個對抗同溫層、促進「異質觀點對話」的去極化對話平台。
-> 本 repository 為**系統設計作品集**，只展示架構與設計，**不含任何原始碼與商業機密**。
+> 這個 repo 是我的**作品集**，聚焦展示**我負責的前端 UI/UX 與 Godot 2D 世界**；不含原始碼與機密。
 
 <p align="center">
-  <em>Heterogeneous-viewpoint dialogue platform · React · Django · Godot · RAG / NLP</em>
+  <em>React · D3.js · Godot 4.7 · 前端視覺化 · 遊戲互動</em>
 </p>
 
----
-
-## 目錄
-
-| 文件 | 內容 |
-|---|---|
-| [`README.md`](./README.md) | 專案總覽、系統架構圖、技術棧、我的負責範圍（本頁）|
-| [`ARCHITECTURE.md`](./ARCHITECTURE.md) | 系統架構、前後端關係、Database Flow、API Flow、AI Flow、使用者操作流程（全 Mermaid）|
-| [`API.md`](./API.md) | 完整 REST / WebSocket API 對照表 |
-| [`DATABASE.md`](./DATABASE.md) | Database Schema、ER Diagram、各表用途與關聯 |
-| [`TECHNICAL_OVERVIEW.md`](./TECHNICAL_OVERVIEW.md) | 面試用技術總覽（目的 / 架構 / 技術選型理由 / AI / API / DB / 我的貢獻）|
-| [`learning.md`](./learning.md) | 給自己看的超詳細架構筆記 |
+**我在這個團隊研究專案負責：前端使用者介面 / 視覺化，以及 Godot 2D 虛擬大廳。**
+（後端、AI/NLP、資料庫、以及所有前後端串接由其他成員負責——見 [🙋 我的角色界線](#-我的角色界線)。）
 
 ---
 
-## 專案簡介
+## 🎯 我做的東西（重點看這裡）
 
-**TakeABridge** 是一個異質觀點對話平台，目標是對抗回聲室效應與社會極化。系統會依「立場向量」把**立場相反**的使用者配對在一起，透過結構化的去極化對話（真人—真人、真人—AI 代理人）促進彼此理解，並用**概念認知網路圖（CCND, Conceptual Cognitive Network Diagram）**即時視覺化每個人推理脈絡的擴張。
+### 1. 對話結算畫面 — 信封開封 → 收據式數據視覺化 → 匯出分享長圖
 
-- **性質**：國科會（NSTC）大專學生研究計畫（115 年度）
-- **核心假設**：與具備高品質知識架構、無情緒干擾的 AI 對話，能達到與真人異質對話同等甚至更穩定的去極化效果。
+> 🖼️ _[截圖位：`assets/settlement-envelope.png` 信封 + `assets/settlement-receipt.png` 收據結算頁 — 建議放一張開封前、一張開封後]_
 
-### 核心功能
+使用者對話結束、填完後測後，跳出一個**信封**，點擊有**開封動畫**，滑出「收據 / 明細」風格的結算：
+- 立場軌跡（1–7 刻度尺，對話前 → 對話後，數字跳動動畫）
+- 思辨投入**雷達圖**、讚/倒讚**甜甜圈**
+- 一鍵**匯出整份長圖 PNG** 給使用者分享
 
-- 🧭 **立場量測與向量化**：李克特量表 + 開放式問卷 → 連續立場分數（1–7）+ 語意向量（384 維）
-- 🔀 **異質配對**：以「最大化立場距離」為目標，把立場最相反、語意最不同的人配在一起
-- 🤖 **RAG AI 代理人**：以 ChromaDB 知識庫為依據，扮演對立立場與使用者對話
-- 💬 **即時對話室**：WebSocket 串流；即時偵測情緒強度、離題、僵局並給提示
-- 🕸️ **CCND 概念認知網路圖**：把每個人的推理脈絡建成語意樹，可時間軸回放
-- 📊 **去極化結算**：立場偏移量、去極化指標、思辨投入評級
-- 🎮 **Godot 虛擬大廳**：2D 多人社交世界，玩家張貼議題、表情互動、語音聊天
-- 📚 **觀點知識庫**：把高品質觀點沉澱成可瀏覽、可人工審核的知識庫
+**亮點**：圖表全**手刻 inline SVG**（不裝圖表套件、配色過無障礙色彩驗證）；評級**刻意只看「思辨投入」不看立場方向**，避免獎勵使用者為分數改立場而污染實驗數據。→ [看 case study](./CONTRIBUTIONS.md#case-1--對話結算畫面)
 
----
+### 2. CCND 概念認知網路圖 — D3.js 力導向圖
 
-## 系統架構總覽
+> 🖼️ _[截圖位：`assets/ccnd-graph.png` — CCND 力導向圖展開狀態]_
 
-```mermaid
-flowchart TB
-    subgraph Client["🖥️ 前端 Client"]
-        React["React SPA<br/>(參與者 + 研究者介面)"]
-        D3["D3.js<br/>CCND 力導向圖"]
-        Godot["Godot 4.7<br/>2D 多人虛擬大廳 (WASM)"]
-    end
+把後端算出的「語意樹」（一個人的推理脈絡）用 **D3.js 力導向圖**畫成可縮放、有層次的網路圖，讓抽象的推理結構變成使用者一眼看得懂的視覺。→ [看 case study](./CONTRIBUTIONS.md#case-2--ccnd-概念網路圖視覺化)
 
-    subgraph Gateway["🚪 API Gateway"]
-        DRF["Django REST Framework<br/>(HTTP)"]
-        Channels["Django Channels<br/>(WebSocket, ASGI)"]
-    end
+### 3. Godot 2D 虛擬大廳 — 多人社交世界
 
-    subgraph Modules["⚙️ 六大模組"]
-        M1["M1 Auth<br/>JWT 認證"]
-        M2["M2 Topic & Stance<br/>立場量測 / 向量化"]
-        M3["M3 Matching & AI Agent<br/>異質配對 / RAG 代理"]
-        M4["M4 Dialogue Room<br/>即時對話 + NLP 介入"]
-        M5["M5 NLP & CCND<br/>語意樹 / 去極化指標"]
-        M6["M6 Summary & KB<br/>觀點知識庫"]
-    end
+> 🖼️ _[截圖位：`assets/godot-lobby.png` 世界全景 + `assets/godot-issue.png` 頭頂議題/表情互動]_
 
-    subgraph Data["🗄️ 資料層"]
-        PG[("PostgreSQL 16<br/>+ pgvector<br/>業務資料 + 對話向量")]
-        Chroma[("ChromaDB<br/>RAG 靜態知識庫")]
-        Redis[("Redis<br/>Channel Layer")]
-    end
+Godot 4.7 做的 2D 多人世界：玩家相遇、在頭上張貼議題、用 5 種表情回應、發起聊天、語音互動。核心架構決定：**RPC 掛在玩家節點、UI 只做本地呈現**。→ [看 case study](./CONTRIBUTIONS.md#case-3--godot-2d-虛擬大廳架構)
 
-    subgraph AI["🧠 AI / NLP"]
-        ST["Sentence-Transformers<br/>(本地 embedding)"]
-        Claude["Claude / LLM<br/>(對話生成)"]
-        BERT["BERT / DistilBERT<br/>(分類 / 情緒)"]
-    end
+### 4. 成就系統 UI
 
-    React -->|HTTP| DRF
-    React -->|WebSocket| Channels
-    Godot -->|HTTP / service token| DRF
-    DRF --> Modules
-    Channels --> M4
-    Channels --> M3
-    Modules --> PG
-    M3 --> Chroma
-    Channels -.-> Redis
-    M2 --> ST
-    M3 --> Claude
-    M3 --> Chroma
-    M5 --> ST
-    M5 --> BERT
-    M4 --> BERT
-```
+> 🖼️ _[截圖位：`assets/achievement.png` 成就牆 + 解鎖 toast]_
 
-> 詳細的前後端關係、資料流、API 流程、AI 流程與使用者操作流程，見 [`ARCHITECTURE.md`](./ARCHITECTURE.md)。
+成就牆、頭銜、解鎖 toast 通知。
+
+📌 **更多細節與技術決策 → [`CONTRIBUTIONS.md`](./CONTRIBUTIONS.md)（我的 case studies）**
 
 ---
 
-## 技術棧
+## 🧰 技術棧（粗體 = 我實際用到）
 
 | 層級 | 技術 |
 |---|---|
-| **前端** | React 19 · Vite · React Router · D3.js（CCND 視覺化）· html-to-image |
-| **遊戲端** | Godot 4.7（GL Compatibility）· WebSocketMultiplayerPeer · WASM Web export |
-| **後端** | Python 3.11 · Django 5 · Django REST Framework · Django Channels（ASGI）|
-| **即時** | WebSocket · Redis（Channel Layer）|
-| **資料庫** | PostgreSQL 16 + **pgvector**（對話語意向量）· ChromaDB（RAG 知識庫）|
-| **AI / NLP** | Sentence-Transformers（多語 MiniLM, 384 維）· Claude / OpenAI · 本地微調 BERT（節點分類）· DistilBERT（情緒）· LangChain（RAG 串接）|
-| **認證** | JWT（SimpleJWT）|
-
-技術選型理由見 [`TECHNICAL_OVERVIEW.md`](./TECHNICAL_OVERVIEW.md#技術選型理由)。
+| **我的前端** | **React 19** · **Vite** · **React Router** · **D3.js（CCND 視覺化）** · **inline SVG 圖表** · **html-to-image（匯出 PNG）** |
+| **我的遊戲端** | **Godot 4.7**（GL Compatibility）· 場景/節點/UI · 音訊 DSP · WASM Web export |
+| 後端（團隊）| Python · Django · DRF · Django Channels |
+| 資料 / AI（團隊）| PostgreSQL + pgvector · ChromaDB · Sentence-Transformers · Claude · BERT · LangChain |
 
 ---
 
-## 六大模組
+## 🙋 我的角色界線
 
-| 模組 | 名稱 | 說明 |
-|---|---|---|
-| **M1** | User Auth | JWT 認證、註冊/登入、帳號管理、表面匿名實質具名 |
-| **M2** | Topic & Stance | 議題選擇、量表 + 開放式問卷、Sentence-Transformers 立場向量化、stance score 計算 |
-| **M3** | Matching & AI Agent | 立場向量異質配對（歐氏 + 餘弦距離）、RAG 對立立場 AI 代理人生成 |
-| **M4** | Dialogue Room | Channels WebSocket 即時對話、回應長度限制、離題偵測、情緒閾值冷靜提示 |
-| **M5** | NLP & CCND | 語意距離計算、概念認知網路圖、D3 力導向圖即時渲染、WebSocket 推送 |
-| **M6** | Summary & KB | 對話摘要、立場偏移量化報告、情緒分數變化、觀點知識庫沉澱 |
+> 團隊研究專案（國科會大專生計畫）。以下清楚區分，避免誤導。
 
----
+**✅ 我負責**
+- **前端 UI / UX / 視覺化**：頁面呈現、元件、CCND 的 D3 視覺化、結算畫面（動畫 + 匯出）、成就系統
+- **Godot 2D 虛擬大廳**：世界/玩家/UI、議題與表情互動、語音 DSP、大廳顯示
 
-## 🙋 我的負責範圍
-
-> 這是團隊研究專案。以下**只列出我實際負責的部分**，其餘（後端、AI/NLP、資料庫、以及所有前後端串接）由團隊其他成員負責。
-
-### ✅ 我負責
-
-**1. 前端 UI / UX / 視覺化（React）**
-- 參與者與研究者介面的版面、元件、視覺設計與互動
-- CCND 概念網路圖的 **D3.js 力導向圖**呈現（`ConversationTreePanel`）
-- 成就系統介面（成就頁、解鎖 toast）
-- 對話結算畫面視覺化（信封開封動畫、收據式立場軌跡 / 雷達圖 / 甜甜圈，可匯出 PNG）
-- 首頁、知識庫、歷史紀錄等頁面的呈現層
-
-**2. Godot 2D 虛擬大廳（遊戲端）**
-- 2D 多人社交世界的場景、玩家與介面（player node ↔ UI CanvasLayer 分層）
-- 議題張貼與 5 種表情回應系統、頭頂泡泡、邀請/聊天互動
-- 語音聊天的本地音訊 DSP（變聲 / 殘響 / 頻譜視覺化）
-- 網頁嵌入的顯示與大廳 UX
-
-### 🚫 我不負責（由團隊其他成員 / 後端負責）
-
-- **前端 ↔ 後端串接**：API client、JWT 換發、WebSocket 接線、資料抓取邏輯
-- **Godot ↔ 後端串接**：`Backend.gd` 對 Django 的呼叫
-- 後端（Django / DRF / Channels）、AI / RAG / NLP、資料庫與配對演算法
-
-> 在 [`ARCHITECTURE.md`](./ARCHITECTURE.md) 與 [`learning.md`](./learning.md) 中，凡屬「串接 / 後端」的部分皆有標註，以清楚區分我的貢獻與整體系統。
+**🚫 我不負責（其他成員 / 後端）**
+- 前端 ↔ 後端串接（API client、JWT、WebSocket 接線、資料抓取）
+- Godot ↔ 後端串接（`Backend.gd`）
+- 後端（Django/DRF/Channels）、AI/RAG/NLP、資料庫、配對演算法
 
 ---
 
-## 授權與說明
+## 📚 System Context（整體系統 — 幫助理解全貌，多為團隊後端作品）
 
-本 repository 僅含系統設計文件與架構圖，**不包含任何原始碼、金鑰、資料或商業機密**，用於個人作品集展示。實際程式碼存放於團隊私有 repository。
+> 以下文件描述**整個平台**的設計，讓你理解我的部分接在哪。**大部分屬後端/AI 團隊，非我個人作品**，放這裡是為了展現我理解系統全貌。
+
+| 文件 | 內容 |
+|---|---|
+| [`ARCHITECTURE.md`](./ARCHITECTURE.md) | 系統架構、前後端關係、Database/API/AI Flow、使用者流程（Mermaid）|
+| [`API.md`](./API.md) | 完整 REST / WebSocket 對照表（後端團隊）|
+| [`DATABASE.md`](./DATABASE.md) | Schema、ER Diagram、各表用途（後端團隊）|
+| [`TECHNICAL_OVERVIEW.md`](./TECHNICAL_OVERVIEW.md) | 面試用技術總覽（含技術選型理由）|
+
+### 專案一句話
+> 量測你的立場 → 把你和**立場最相反**的人（或對立 AI）配對對話 → 即時把推理畫成概念網路圖 → 對話後用數字證明立場移動了多少 → 好觀點沉澱成知識庫。
+
+```mermaid
+flowchart LR
+    U["使用者"] --> FE["前端 React / Godot<br/>(我負責 UI/世界)"]
+    FE -->|"HTTP / WebSocket<br/>(串接:團隊)"| BE["Django 後端"]
+    BE --> AI["AI / NLP<br/>配對 · RAG · CCND"]
+    BE --> DB[("PostgreSQL + pgvector<br/>ChromaDB")]
+    classDef mine fill:#e3efe0,stroke:#4c7a3c,color:#234;
+    class FE mine;
+```
+
+---
+
+## 說明
+本 repository 僅含系統設計文件、架構圖與（待補的）畫面截圖，**不含任何原始碼、金鑰、資料或商業機密**，用於個人作品集展示。實際程式碼存放於團隊私有 repository。
