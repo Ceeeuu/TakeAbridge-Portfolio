@@ -1,0 +1,11 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+
+# 這是純設計文件 repo — 不放任何原始碼、資料或機密
+*.env
+.env*
