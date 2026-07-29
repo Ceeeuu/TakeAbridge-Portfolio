@@ -45,7 +45,7 @@ flowchart TB
     CH --> SVC
     SVC --> PG
     SVC --> CR
-    CH -.channel layer.-> RD
+    CH -.->|channel layer| RD
     SVC --> EMB
     SVC --> LLM
     SVC --> CLS
