@@ -30,15 +30,20 @@ TakeABridge 是一個促進異質觀點對話的去極化對話平台。
 - 我用到的：React 19、Vite、React Router、D3.js、Godot 4
 - 團隊其他部分：Django 6、DRF、Django Channels、PostgreSQL + pgvector、ChromaDB、Sentence-Transformers、Claude、Gemini、LangChain
 
-## 分工
+## 團隊分工
 
-- 我：前端畫面呈現與 Godot 2D 世界
-- 其他成員：前端與後端的串接、後端、AI / NLP、資料庫、配對演算法
+| 成員 | 負責 |
+|---|---|
+| 賴則名 | 系統架構、對話模組、CCND 架構、問卷與知識庫規範 |
+| 伍晨安 | 前後端整合、後端 API、測試伺服器 |
+| 黃筱筑 | 問卷計分、CCND 機器學習方法、測試優化 |
+| **陳彩希（我）** | **前端介面、Godot 虛擬大廳** |
+| 葉錦諦 | RAG 資料、觀點知識庫 |
 
 ## 系統整體文件
 
-為了理解我的部分接在哪，附上整體系統的設計文件（多為團隊後端）：
-[ARCHITECTURE.md](./ARCHITECTURE.md)、[API.md](./API.md)、[DATABASE.md](./DATABASE.md)、[TECHNICAL_OVERVIEW.md](./TECHNICAL_OVERVIEW.md)
+理解整個平台與我的部分接在哪：
+[ARCHITECTURE.md](./ARCHITECTURE.md)（系統整體）、[API.md](./API.md)、[DATABASE.md](./DATABASE.md)、[TECHNICAL_OVERVIEW.md](./TECHNICAL_OVERVIEW.md)
 
 ---
 
