@@ -5,7 +5,7 @@
 | 層級 | 技術 |
 |---|---|
 | 前端 | React 19、Vite、React Router、axios、D3.js（CCND 力導向圖）|
-| 遊戲端 | Godot 4（像素風 2D、TileMap、WebSocket 多人）|
+| 遊戲端 | Godot 4.7（像素風 2D、TileMap、WebSocket 多人）|
 | 後端 | Python、Django 6、Django REST Framework、Django Channels（ASGI／WebSocket）|
 | 資料 | PostgreSQL 16 + pgvector、ChromaDB、Redis |
 | AI / NLP | Sentence-Transformers（384 維語義向量）、Claude Sonnet（對話）、Gemini（CCND 概念擷取）、DistilBERT（情緒）、LangChain（RAG）|
