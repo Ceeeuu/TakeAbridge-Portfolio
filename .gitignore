@@ -1,6 +1,9 @@
 # 個人筆記，不公開
 learning.md
 
+# PlantUML 出圖工具（21MB，本地渲染用，不入庫；.puml 原始碼與 assets/*.svg 保留）
+plantuml.jar
+
 # OS
 .DS_Store
 Thumbs.db

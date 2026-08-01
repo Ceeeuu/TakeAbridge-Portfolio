@@ -1,0 +1,45 @@
+@startuml nlp-pipeline
+' 即時對話 NLP 分析管線 — 訊息從送出到 CCND 更新
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Noto Sans CJK TC"
+skinparam sequence {
+  ArrowColor #5A6B7B
+  LifeLineBorderColor #8FA6BD
+  ParticipantBorderColor #8FA6BD
+  ParticipantBackgroundColor #F3F6FA
+  ParticipantFontColor #2C3E50
+  ActorBorderColor #8FA6BD
+}
+
+actor "使用者 A" as A
+participant "Channels\nConsumer" as C
+actor "對話對象 B" as B
+participant "NLP 管線" as N
+participant "Gemini\n(CCND)" as G
+participant "前端\nD3.js" as F
+
+A -> C : 送出訊息（WebSocket）
+activate C
+
+C -> C : 第一層｜內容過濾\n35 詞黑名單（同步阻斷）
+alt 命中攻擊性詞彙
+  C --> A : 攔截並通知，不轉發
+else 通過
+  C -> B : 即時轉發訊息
+  C ->> N : 非同步觸發分析
+  deactivate C
+  activate N
+  N -> N : 第二層｜情緒偵測\nDistilBERT（閾值 0.65 + 第二人稱）
+  N --> A : 情緒過高 → 私下推送改寫建議\n(accept / modify / ignore)
+  N -> N : 第三層｜離題偵測\nSentence-Transformers 餘弦距離
+  N -> N : 立場漂移追蹤\n（累積 200 字或間隔 5 分鐘觸發）
+  N -> G : 擷取概念節點
+  G --> N : 節點標籤 + 所屬面向
+  N -> N : 計算節點語義距離\n（>0.7 合併、<0.5 新增，上限 60）
+  N ->> F : WebSocket 推送節點/邊 + 指標
+  deactivate N
+  F -> F : 力導向圖即時渲染\n（每 2-3 則批次更新）
+end
+
+@enduml

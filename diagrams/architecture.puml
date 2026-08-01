@@ -1,0 +1,82 @@
+@startuml architecture
+' 系統技術架構圖 — TakeABridge / BridgeUs
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam defaultFontName "Noto Sans CJK TC"
+skinparam roundcorner 10
+skinparam componentStyle rectangle
+skinparam ArrowColor #5A6B7B
+skinparam packageStyle rectangle
+
+skinparam package {
+  BorderColor #B8C4D0
+  FontColor #2C3E50
+  FontStyle bold
+}
+skinparam component {
+  BackgroundColor #F3F6FA
+  BorderColor #8FA6BD
+  FontColor #2C3E50
+}
+
+package "客戶端（瀏覽器）" as client {
+  [React 19 前端\nVite · React Router] as react
+  [D3.js 力導向圖\n（CCND 視覺化）] as d3
+  [Godot 4.7\n2D 虛擬大廳] as godot
+}
+
+package "接入層（Django 6）" as gateway {
+  [Django REST Framework\nRESTful API] as drf
+  [Simple JWT\n身分驗證] as jwt
+  [Django Channels\nASGI · WebSocket] as channels
+}
+
+package "應用模組" as modules {
+  [M1 使用者管理] as m1
+  [M2 立場量測] as m2
+  [M3 異質配對] as m3
+  [M4 對話室\nH-H / H-AI] as m4
+  [M5 NLP 分析 · CCND] as m5
+  [M6 摘要 · 觀點知識庫] as m6
+}
+
+package "AI / NLP 服務" as ai {
+  [Claude Sonnet\n對立立場對話 · 摘要] as claude
+  [Gemini API\nCCND 概念擷取] as gemini
+  [Sentence-Transformers\n384 維語義向量] as st
+  [DistilBERT\n情緒偵測] as bert
+  [LangChain\nRAG 檢索] as lc
+}
+
+package "資料層" as data {
+  database "PostgreSQL 16\n+ pgvector" as pg
+  database "ChromaDB\nRAG 知識向量" as chroma
+  database "Redis 7\nChannel Layer · 快取" as redis
+}
+
+react --> drf : HTTP
+react --> channels : WebSocket
+d3 <-- channels : 推送節點/邊
+godot --> channels : 位置/標籤同步
+
+drf --> modules
+jwt --> m1
+channels --> m4
+channels --> m5
+
+m2 --> st
+m3 --> st
+m4 --> bert
+m4 --> st
+m4 --> claude
+m5 --> gemini
+m5 --> st
+m6 --> claude
+m6 --> lc
+lc --> chroma
+
+modules --> pg
+channels ..> redis : 訊息分發
+st --> pg : 語義向量
+
+@enduml
